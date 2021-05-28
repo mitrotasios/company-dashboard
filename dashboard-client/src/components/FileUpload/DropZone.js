@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload, faTimes } from '@fortawesome/free-solid-svg-icons'
 
-const DropZone = () => {
+const DropZone = (props) => {
 
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
@@ -97,6 +97,9 @@ const DropZone = () => {
     return (
         <>
             <div className="container">
+                {/* <div>
+                    {JSON.stringify(props.data)}
+                </div> */}
                 <div className="drop-container"
                         onClick={fileInputClicked}
                         onDragOver={dragOver}

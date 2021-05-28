@@ -13,7 +13,7 @@ import {
     ModalCloseButton,
   } from "@chakra-ui/react"
 
-function FileUpload() {
+export const FileUpload = (props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     return (
       <>
@@ -26,7 +26,7 @@ function FileUpload() {
             <ModalBody>
                 <div>
                     <div className="content">
-                        <DropZone />
+                        <DropZone data={props.data}/>
                     </div>
                 </div>
             </ModalBody>
@@ -40,6 +40,4 @@ function FileUpload() {
         </Modal>
       </>
     )
-  }
-
-export default FileUpload;
+}
