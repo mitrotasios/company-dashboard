@@ -215,7 +215,8 @@ const DropZone = (props) => {
                 <button className="file-upload-btn" onClick={() => getRequest()}>GET REQ</button>
                 <button className="file-upload-btn" onClick={() => deleteRequest()}>DELETE REQ</button>
             </div>
-                <div className="upload-modal" ref={uploadModalRef}>
+            <div>{JSON.stringify(props.data)}</div>
+            <div className="upload-modal" ref={uploadModalRef}>
                 <div className="overlay"></div>
                 <div className="close" onClick={(() => closeUploadModal())}>X</div>
                 <div className="progress-container">
