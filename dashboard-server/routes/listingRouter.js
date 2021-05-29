@@ -47,7 +47,7 @@ listingRouter.route('/')
         Promise.all(promises).then(() => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(fileRows);
+            res.json({data: fileRows, error: null});
         })
     }
 })
