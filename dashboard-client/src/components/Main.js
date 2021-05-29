@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { FileUpload } from './FileUpload/FileUpload';
+import DropZone from './FileUpload/DropZone';
 
 class Main extends Component {
     constructor(props) {
@@ -17,7 +18,10 @@ class Main extends Component {
 
     render() {
         return(
-            <FileUpload data={this.state.data}/>
+            <>
+                <FileUpload data={this.state.data}/>
+                <DropZone data={this.state.data} />
+            </>
         );
     }
 }

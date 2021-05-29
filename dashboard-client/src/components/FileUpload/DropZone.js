@@ -73,6 +73,83 @@ const DropZone = (props) => {
         return true;
     }
 
+    const uploadModalRef = useRef();
+    const uploadRef = useRef();
+    const progressRef = useRef();
+
+    const uploadFiles = () => {
+        uploadModalRef.current.style.display = 'block';
+        uploadRef.current.innerHTML = 'File(s) Uploading...';
+        for (let i = 0; i < validFiles.length; i++) {
+            const formData = new FormData();
+            formData.append('file', validFiles[i]);
+            //formData.append('key', 'add your API key here');
+            fetch('/api/listings', {
+                method: 'POST',
+                body: formData
+              })
+              .then(response => {
+                  if (response.ok) {
+                    return response;
+                  } else {
+                    var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                    error.response = response;
+                    throw error;
+                  }
+                }, error => {
+                    throw error;
+                  }
+              )
+              .then(response => response.json())
+              .then(response => console.log(response[200]))
+              .catch(error => { console.log('User', error.message); alert("Upload was not possible")});
+        }
+    }
+
+    const getRequest = () => {
+        fetch('/api/listings')
+              .then(response => {
+                  if (response.ok) {
+                    return response;
+                  } else {
+                    var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                    error.response = response;
+                    throw error;
+                  }
+                }, error => {
+                    throw error;
+                  }
+              )
+              .then(response => response.json())
+              .then(response => alert(JSON.stringify(response)))
+              .catch(error => { console.log('User', error.message); alert("GET was not possible")});
+    }
+
+    const deleteRequest = () => {
+        fetch('/api/listings', {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                return response;
+                } else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+                }
+            }, error => {
+                throw error;
+                }
+            )
+            .then(response => response.json())
+            .then(response => alert(JSON.stringify(response)))
+            .catch(error => { console.log('User', error.message); alert("GET was not possible")});
+    }
+
+    const closeUploadModal = () => {
+        uploadModalRef.current.style.display = 'none';
+    }
+
     const removeFile = (name) => {
         const validFileIndex = validFiles.findIndex(e => e.name === name);
         validFiles.splice(validFileIndex, 1);
@@ -129,10 +206,23 @@ const DropZone = (props) => {
                                     <span className={`file-name ${data.invalid ? 'file-error' : ''}`}>{data.name}</span>
                                     <span className="file-size">({fileSize(data.size)})</span> {data.invalid && <span className='file-error-message'>({errorMessage})</span>}
                                 </div>
-                                <div className="file-remove" onClick={() => removeFile(data.name)}><FontAwesomeIcon icon={faTimes} color="red" size='md'/></div>
+                                <div className="file-remove" onClick={() => removeFile(data.name)}><FontAwesomeIcon icon={faTimes} color="red" size='1x'/></div>
                             </div>
                         )
                     }
+                </div>
+                <button className="file-upload-btn" onClick={() => uploadFiles()}>Upload Files</button>
+                <button className="file-upload-btn" onClick={() => getRequest()}>GET REQ</button>
+                <button className="file-upload-btn" onClick={() => deleteRequest()}>DELETE REQ</button>
+            </div>
+                <div className="upload-modal" ref={uploadModalRef}>
+                <div className="overlay"></div>
+                <div className="close" onClick={(() => closeUploadModal())}>X</div>
+                <div className="progress-container">
+                    <span ref={uploadRef}></span>
+                    <div className="progress">
+                        <div className="progress-bar" ref={progressRef}></div>
+                    </div>
                 </div>
             </div>
         </>

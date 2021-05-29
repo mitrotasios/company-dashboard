@@ -8,6 +8,7 @@ const multer = require('multer');
 const upload = multer({ dest: 'tmp/csv/' });
 
 const Listings = require('../models/listings');
+const { worker } = require('cluster');
 
 const listingRouter = express.Router();
 
@@ -25,15 +26,39 @@ listingRouter.route('/')
 })
 .post(upload.single('file'), (req, res, next) => {
     const fileRows = [];
-    csv.fromPath(req.file.path)
-        .on("data", function (data) {
-            fileRows.push(data); // push each row
+    fs.createReadStream(req.file.path)
+        .pipe(csv.parse({ headers: true }))
+        .on('error', error => next(error))
+        .on('data', row => fileRows.push(row))
+        .on('end', () => storeRows(fileRows));
+    
+    
+    const storeRows = (fileRows) => {
+        fs.unlinkSync(req.file.path);
+        promises = fileRows.map(row => {
+            const filter =  {id: row.id};
+            Listings.findOneAndUpdate(filter, {
+                $set: row
+            }, { new: true , upsert: true})
+            .then((row) => (row))
+            .catch((err) => next(err))
+        });
+
+        Promise.all(promises).then(() => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(fileRows);
         })
-        .on("end", function () {
-            console.log(fileRows) //contains array of arrays. Each inner array represents row of the csv file, with each element of it a column
-            fs.unlinkSync(req.file.path);   // remove temp file
-            //process "fileRows" and respond
-        })
+    }
 })
+.delete((req,res,next) => {
+    Listings.remove({})
+    .then((resp) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(resp);
+    }, (err) => next(err))
+    .catch((err) => next(err));
+});
 
 module.exports = listingRouter;
