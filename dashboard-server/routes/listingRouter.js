@@ -25,30 +25,53 @@ listingRouter.route('/')
     .catch((err) => next(err));
 })
 .post(upload.single('file'), (req, res, next) => {
+    const LISTINGS = ["id", "make", "price", "mileage", "seller_type"]
+    const CONTACTS = ["listing_id", "contact_date"]
     const fileRows = [];
+    var format = "";
     fs.createReadStream(req.file.path)
         .pipe(csv.parse({ headers: true }))
+        .on('headers', cols => checkCols(cols))
         .on('error', error => next(error))
         .on('data', row => fileRows.push(row))
         .on('end', () => storeRows(fileRows));
     
-    
+    const checkCols= (cols) => {
+        if (JSON.stringify(cols) === JSON.stringify(LISTINGS)) {
+            format = "LISTINGS";
+        }
+        if (JSON.stringify(cols) === JSON.stringify(CONTACTS)) {
+            format = "CONTACTS";
+        }
+    }
+
     const storeRows = (fileRows) => {
         fs.unlinkSync(req.file.path);
-        promises = fileRows.map(row => {
-            const filter =  {id: row.id};
-            Listings.findOneAndUpdate(filter, {
-                $set: row
-            }, { new: true , upsert: true})
-            .then((row) => (row))
-            .catch((err) => next(err))
-        });
+        
+        if (format == "LISTINGS") {
+            promises = fileRows.map(row => {
+                const filter =  {id: row.id};
+                Listings.findOneAndUpdate(filter, {
+                    $set: row
+                }, { new: true , upsert: true})
+                .then((row) => (row))
+                .catch((err) => next(err))
+            });
 
-        Promise.all(promises).then(() => {
-            res.statusCode = 200;
+            Promise.all(promises).then(() => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json({data: fileRows, error: null});
+            })
+        }
+        else if (format == "CONTACTS") {
+
+        }
+        else {
+            res.statusCode = 403;
             res.setHeader('Content-Type', 'application/json');
-            res.json({data: fileRows, error: null});
-        })
+            res.json({data: null, error: "Unsupported File Foramt"});
+        }
     }
 })
 .delete((req,res,next) => {
