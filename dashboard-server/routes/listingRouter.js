@@ -47,7 +47,7 @@ listingRouter.route('/')
 
     const storeRows = (fileRows) => {
         fs.unlinkSync(req.file.path);
-        
+
         if (format == "LISTINGS") {
             promises = fileRows.map(row => {
                 const filter =  {id: row.id};
@@ -65,7 +65,22 @@ listingRouter.route('/')
             })
         }
         else if (format == "CONTACTS") {
+            promises = fileRows.map(row => {
+                const filter =  {id: row.listing_id};
+                Listings.findOneAndUpdate(
+                    filter, 
+                    { $push: { "contacts": row.contact_date } },
+                    {new: true}
+                )
+                .then((row) => (row))
+                .catch((err) => next(err))
+            });
 
+            Promise.all(promises).then(() => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json({data: fileRows, error: null});
+            })          
         }
         else {
             res.statusCode = 403;
