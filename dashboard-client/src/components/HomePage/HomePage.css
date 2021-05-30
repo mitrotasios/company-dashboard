@@ -1,0 +1,83 @@
+.header {
+    border-bottom: 1px solid #CACACB;
+    box-shadow: 0px 0px 2px 0px #CACACB;
+    height: 60px;
+}
+
+.myml {
+    margin-left: 3vh;
+}
+
+.sidebar {
+    border-right: 1px solid #CACACB;  
+}
+
+.menu-item {
+    margin-top: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: #919191;
+}
+
+.menu-item:hover {
+    font-weight: 700;
+    color: #2D2D35;
+    border-right: 3px solid #2D2D35;
+}
+
+.menu-item > a:hover {
+    color: #2D2D35;
+}
+
+.menu-item-active > a:hover {
+    color: #2D2D35;
+}
+
+.menu-item-active {
+    margin-top: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-right: 3px solid #2D2D35;
+    font-weight: 700;
+}
+
+.flex-fill {
+    flex:1 1 auto;
+  }
+
+.bottom {
+    position: fixed;
+    bottom: 0px;
+    height: 150px;
+    border-top: 1px solid #CACACB;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.profile-pic {
+    border: 1px solid red;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+}
+
+.button {
+    border-radius: 5px;
+}
+
+#upload-csv {
+    width: 100%;
+    height: 40px;
+    background-color: #F5F200;
+    align-items: center;
+    justify-content:center;
+    display:flex;
+    font-weight: 700;
+}
+
+#upload-csv:hover {
+    color: #2D2D35;
+    box-shadow: 0px 0px 3px 0px #CACACB;
+}

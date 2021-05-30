@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { FileUpload } from './FileUpload/FileUpload';
-import DropZone from './FileUpload/DropZone';
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
+import HomePage from './HomePage/HomePage';
 
 class Main extends Component {
     constructor(props) {
@@ -33,9 +33,41 @@ class Main extends Component {
     render() {
         return(
             <>
-            
-                <FileUpload data={this.state.data}/>
-                <DropZone data={this.state.data} />
+            <Switch>
+                <Route exact path="/dashboard/selling-prices" 
+                    component={() => (
+                        <HomePage 
+                            data={this.state.data}
+                            isLoading={this.state.isLoading}
+                            />
+                    )}>
+                </Route>
+                <Route path="/dashboard/make-distribution" 
+                    component={() => (
+                        <HomePage 
+                            data={this.state.data}
+                            isLoading={this.state.isLoading}
+                            />
+                    )}>
+                </Route>
+                <Route path="/dashboard/contacts" 
+                    component={() => (
+                        <HomePage 
+                            data={this.state.data}
+                            isLoading={this.state.isLoading}
+                            />
+                    )}>
+                </Route>
+                <Route path="/upload" 
+                    component={() => (
+                        <HomePage 
+                            data={this.state.data}
+                            isLoading={this.state.isLoading}
+                            />
+                    )}>
+                </Route>
+                <Redirect to="/dashboard/selling-prices" />
+            </Switch>
             </>
         );
     }
