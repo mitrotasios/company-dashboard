@@ -48,12 +48,12 @@
 .bottom {
     position: fixed;
     bottom: 0px;
-    height: 150px;
-    border-top: 1px solid #CACACB;
+    height: 150px;    
+}
+
+.bottom > div {
     padding-top: 10px;
-    padding-bottom: 10px;
-    padding-right: 0px;
-    padding-left: 0px;
+    border-top: 1px solid #CACACB;
 }
 
 .profile-pic {
@@ -69,7 +69,7 @@
 
 #upload-csv {
     width: 100%;
-    height: 40px;
+    height: 50px;
     background-color: #F5F200;
     align-items: center;
     justify-content:center;
@@ -80,4 +80,39 @@
 #upload-csv:hover {
     color: #2D2D35;
     box-shadow: 0px 0px 3px 0px #CACACB;
+}
+
+.profile-info {
+    height: 150px;
+    background-color: red;
+}
+
+.kpis {
+    height: 150px;
+}
+
+.primary-kpi {
+    background-color: #F5F200;
+    border-radius: 10px;
+    height: 100px;
+    box-shadow: 0px 0px 5px 0px #E2E2E4;
+}
+
+.secondary-kpi {
+    border-color: 1px solid #E2E2E4;
+    border-radius: 10px;
+    height: 100px;
+    box-shadow: 0px 0px 5px 0px #E2E2E4;
+    color: #919191;
+    margin-left: 30px;
+}
+
+.secondary-kpi > .row > .col > div > span {
+    color: #919191;
+}
+
+.KPI {
+    font-size: x-large;
+    font-weight: 700;
+    color: #2D2D35;
 }

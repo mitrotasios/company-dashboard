@@ -38,13 +38,36 @@ class HomePage extends Component {
                                 <a type="button" href="/dashboard/contacts">Most Contacted Listings</a>
                             </div>
                         </div>
-                        <div class="row px-3">
+                        <div class="row">
                             <div class="col-2 bottom">
-                                <a id="upload-csv" class="button" type="button" href="/upload">Upload CSV</a>
+                                <div>
+                                    <a id="upload-csv" class="button" type="button" href="/upload">Upload CSV</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-10">
+                    <div class="col-10 px-5">
+                        <div className="row profile-info mt-4">
+
+                        </div>
+                        <div className="row kpis mt-4">
+                            <div className="col-3 primary-kpi my-auto">
+                                <div className="row h-100">
+                                    <div className="col my-auto px-4">
+                                        <div>Listings year-to-date (Δ% last year)</div>
+                                        <div><span className="KPI">10.441 listings</span> <span>(+34%)</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-3 secondary-kpi my-auto">
+                                <div className="row h-100">
+                                    <div className="col my-auto px-4">
+                                        <div>Listing-to-buy rate </div>
+                                        <div><span className="KPI">10%</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     {/* <FileUpload data={this.props.data}/>
                     <DropZone data={this.props.data} /> */}
