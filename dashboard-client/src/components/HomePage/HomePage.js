@@ -42,6 +42,17 @@ class HomePage extends Component {
                         </div>
                         <div class="row">
                             <div class="col-2 bottom">
+                                <div className="line"></div>
+                                <div className="row helper">
+                                    <div className="col-3">
+                                        <div className="avatar-wrapper">
+                                            <img src="/memoji.png" />
+                                        </div>
+                                    </div>
+                                    <div className="col my-auto">
+                                        <div style={{"fontWeight": "500"}}>Anna Henderson</div>
+                                    </div>
+                                </div>
                                 <div>
                                     <a id="upload-csv" class="button" type="button" href="/upload"><FontAwesomeIcon icon={faPlus} size='1x'/><span className="ml-1"> Upload CSV</span></a>
                                 </div>

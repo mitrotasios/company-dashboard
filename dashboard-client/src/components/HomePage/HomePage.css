@@ -51,9 +51,9 @@
     height: 150px;    
 }
 
-.bottom > div {
+.bottom > .helper {
     padding-top: 10px;
-    border-top: 1px solid #CACACB;
+    margin-bottom: 10px;
 }
 
 .button {
@@ -114,6 +114,11 @@
     border-radius: 50%;
     height: 100px;
     width: 100px;
+}
+
+.helper > div > .avatar-wrapper {
+    height: 50px;
+    width: 50px;
 }
 
 .main-msg {

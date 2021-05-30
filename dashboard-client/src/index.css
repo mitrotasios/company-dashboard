@@ -53,3 +53,7 @@ code {
 .mr-5 {
   margin-right: 50px;
 }
+
+.line {
+  border-top: 1px solid #CACACB;
+}
