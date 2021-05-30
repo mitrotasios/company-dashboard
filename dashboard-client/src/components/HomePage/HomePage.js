@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './HomePage.css';
 import { FileUpload } from '../FileUpload/FileUpload';
 import DropZone from '../FileUpload/DropZone';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 class HomePage extends Component {
     constructor(props) {
@@ -41,16 +43,24 @@ class HomePage extends Component {
                         <div class="row">
                             <div class="col-2 bottom">
                                 <div>
-                                    <a id="upload-csv" class="button" type="button" href="/upload">Upload CSV</a>
+                                    <a id="upload-csv" class="button" type="button" href="/upload"><FontAwesomeIcon icon={faPlus} size='1x'/><span className="ml-1"> Upload CSV</span></a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-10 px-5">
                         <div className="row profile-info mt-4">
-
+                            <div className="col-1 my-auto">
+                                <div className="avatar-wrapper">
+                                    <img src="/memoji.png" />
+                                </div>
+                            </div>
+                            <div className="col my-auto msg">
+                                <div className="main-msg">Good Morning, <b>Anna!</b></div>
+                                <div className="sub-msg">Here’s an overview of your company’s performance</div>
+                            </div>
                         </div>
-                        <div className="row kpis mt-4">
+                        <div className="row kpis mt-2">
                             <div className="col-3 primary-kpi my-auto">
                                 <div className="row h-100">
                                     <div className="col my-auto px-4">

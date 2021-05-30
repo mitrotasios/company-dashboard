@@ -56,13 +56,6 @@
     border-top: 1px solid #CACACB;
 }
 
-.profile-pic {
-    border: 1px solid red;
-    border-radius: 50%;
-    height: 50px;
-    width: 50px;
-}
-
 .button {
     border-radius: 5px;
 }
@@ -84,7 +77,6 @@
 
 .profile-info {
     height: 150px;
-    background-color: red;
 }
 
 .kpis {
@@ -116,3 +108,19 @@
     font-weight: 700;
     color: #2D2D35;
 }
+
+.avatar-wrapper {
+    background-color: #EBECEE;
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+}
+
+.main-msg {
+    font-size: x-large;
+    
+}
+
+.sub-msg {
+    color: #7D7D82;
+} 
