@@ -58,7 +58,7 @@ class Main extends Component {
                             />
                     )}>
                 </Route>
-                <Route path="/upload" 
+                <Route path="dashboard/upload" 
                     component={() => (
                         <HomePage 
                             data={this.state.data}
