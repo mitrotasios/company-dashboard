@@ -20,6 +20,27 @@ class HomePage extends Component {
         });
     }
 
+    renderContent(path) {
+        switch(path) {
+            case 'selling-prices':
+                return(
+                    <div></div>
+                );
+            case 'make-distribution':
+                return(
+                    <div></div>
+                );
+            case 'contacts':
+                return(
+                    <div></div>
+                );
+            case 'upload':
+                return(
+                    <DropZone data={this.props.data} />
+                );
+        }
+    }
+
     render() {
         return(
             <>
@@ -54,7 +75,7 @@ class HomePage extends Component {
                                     </div>
                                 </div>
                                 <div>
-                                    <a id="upload-csv" class="button" type="button" href="/upload"><FontAwesomeIcon icon={faPlus} size='1x'/><span className="ml-1"> Upload CSV</span></a>
+                                    <a id="upload-csv" class="button" type="button" href="/dashboard/upload"><FontAwesomeIcon icon={faPlus} size='1x'/><span className="ml-1"> Upload CSV</span></a>
                                 </div>
                             </div>
                         </div>
@@ -88,6 +109,9 @@ class HomePage extends Component {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div className="row content">
+                            {this.renderContent(this.state.currentPath)}
                         </div>
                     </div>
                     {/* <FileUpload data={this.props.data}/>
