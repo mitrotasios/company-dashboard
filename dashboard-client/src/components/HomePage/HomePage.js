@@ -3,7 +3,7 @@ import './HomePage.css';
 import { FileUpload } from '../FileUpload/FileUpload';
 import DropZone from '../FileUpload/DropZone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faAngleLeft } from '@fortawesome/free-solid-svg-icons'
 
 class HomePage extends Component {
     constructor(props) {
@@ -36,7 +36,9 @@ class HomePage extends Component {
                 );
             case 'upload':
                 return(
-                    <DropZone data={this.props.data} />
+                    <DropZone 
+                        data={this.props.data} 
+                        addData={this.props.addData} />
                 );
         }
     }
@@ -88,29 +90,51 @@ class HomePage extends Component {
                                 </div>
                             </div>
                             <div className="col my-auto msg">
-                                <div className="main-msg">Good Morning, <b>Anna!</b></div>
-                                <div className="sub-msg">Here’s an overview of your company’s performance</div>
+                                {
+                                    this.state.currentPath == "upload" ? (
+                                        <>
+                                        <div className="main-msg">You can upload your CSV files here, <b>Anna!</b></div>
+                                        <div className="sub-msg">Upload your files and get instant analytics.</div>
+                                        </>
+                                    ) : (
+                                        <>
+                                        <div className="main-msg">Good Morning, <b>Anna!</b></div>
+                                        <div className="sub-msg">Here’s an overview of your company’s performance.</div>
+                                        </>
+                                    )
+                                }
                             </div>
+                            {this.state.currentPath == "upload" ? (
+                                <div className="col my-auto return-home align-self-end text-end">
+                                    <span style={{"color":"#7D7C7E"}}><a type="button" href="/">
+                                        <FontAwesomeIcon icon={faAngleLeft} size='lg'/><span>{' '}</span> Return to dashboard</a>
+                                    </span>
+                                </div>
+                            ) : null}
                         </div>
-                        <div className="row kpis mt-2">
-                            <div className="col-3 primary-kpi my-auto">
-                                <div className="row h-100">
-                                    <div className="col my-auto px-4">
-                                        <div>Listings year-to-date (Δ% last year)</div>
-                                        <div><span className="KPI">10.441 listings</span> <span>(+34%)</span></div>
+                        {
+                            this.state.currentPath == "upload" ? null : (
+                                <div className="row kpis mt-2">
+                                    <div className="col-3 primary-kpi my-auto">
+                                        <div className="row h-100">
+                                            <div className="col my-auto px-4">
+                                                <div>Listings year-to-date (Δ% last year)</div>
+                                                <div><span className="KPI">10.441 listings</span> <span>(+34%)</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-3 secondary-kpi my-auto">
+                                        <div className="row h-100">
+                                            <div className="col my-auto px-4">
+                                                <div>Listing-to-buy rate </div>
+                                                <div><span className="KPI">10%</span></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="col-3 secondary-kpi my-auto">
-                                <div className="row h-100">
-                                    <div className="col my-auto px-4">
-                                        <div>Listing-to-buy rate </div>
-                                        <div><span className="KPI">10%</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row content">
+                            )
+                        }
+                        <div className="row main-content">
                             {this.renderContent(this.state.currentPath)}
                         </div>
                     </div>

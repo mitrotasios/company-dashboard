@@ -30,6 +30,13 @@ class Main extends Component {
         .catch(error => { console.log('User', error.message); alert("GET was not possible")});
     } 
 
+    addData(newData) {
+        var oldData = this.state.data;
+        this.setState({
+            data: [...oldData, newData]
+        })
+    }
+
     render() {
         return(
             <>
@@ -38,6 +45,7 @@ class Main extends Component {
                     component={() => (
                         <HomePage 
                             data={this.state.data}
+                            addData={this.addData}
                             isLoading={this.state.isLoading}
                             />
                     )}>
@@ -46,6 +54,7 @@ class Main extends Component {
                     component={() => (
                         <HomePage 
                             data={this.state.data}
+                            addData={this.addData}
                             isLoading={this.state.isLoading}
                             />
                     )}>
@@ -54,6 +63,7 @@ class Main extends Component {
                     component={() => (
                         <HomePage 
                             data={this.state.data}
+                            addData={this.addData}
                             isLoading={this.state.isLoading}
                             />
                     )}>
@@ -62,6 +72,7 @@ class Main extends Component {
                     component={() => (
                         <HomePage 
                             data={this.state.data}
+                            addData={this.addData}
                             isLoading={this.state.isLoading}
                             />
                     )}>

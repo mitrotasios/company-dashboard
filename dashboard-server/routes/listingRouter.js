@@ -83,7 +83,7 @@ listingRouter.route('/')
             })          
         }
         else {
-            res.statusCode = 403;
+            res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json({data: null, error: "Unsupported File Foramt"});
         }
