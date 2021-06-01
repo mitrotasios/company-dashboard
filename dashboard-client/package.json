@@ -16,13 +16,16 @@
     "@testing-library/user-event": "^12.1.10",
     "@yisheng90/react-loading": "^1.4.4",
     "bootstrap": "^5.0.1",
+    "chart.js": "^3.3.2",
     "framer-motion": "^4",
     "react": "^17.0.2",
+    "react-chartjs-2": "^3.0.3",
     "react-dom": "^17.0.2",
     "react-loading": "^2.0.3",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "zingchart-react": "^3.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
