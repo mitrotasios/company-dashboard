@@ -112,6 +112,7 @@ const DropZone = (props) => {
               )
               .then(response => response.json())
               .then(response => {
+                  alert(JSON.stringify(response))
                 //uploadModalRef.current.style.display = 'none';
                 setIsUploading(false)
                 if (response.error != null) {
@@ -241,9 +242,9 @@ const DropZone = (props) => {
                             }
                         </div> */}
                     </div>
-                    {/* <button className="file-upload-btn" onClick={() => deleteRequest()}>DELETE REQ</button>
+                    <button className="file-upload-btn" onClick={() => deleteRequest()}>DELETE REQ</button>
                     <button className="file-upload-btn" onClick={() => uploadFiles()}>Upload Files</button>
-                    <button className="file-upload-btn" onClick={() => getRequest()}>GET REQ</button> */}
+                    <button className="file-upload-btn" onClick={() => getRequest()}>GET REQ</button>
                 </div>
                 {isUploading ? (<div className="row mt-5"><Skeleton width="100%"/></div>) : null}
                 <div className="row mt-3">

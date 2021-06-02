@@ -4,6 +4,10 @@ const mongoose = require('mongoose');
 const csv = require('fast-csv');
 const fs = require('fs');
 const multer = require('multer');
+const Pool = require('pg').Pool
+const dbKeys = require('../config');
+
+const pool = new Pool(dbKeys)
 
 const upload = multer({ dest: 'tmp/csv/' });
 
@@ -16,13 +20,14 @@ listingRouter.use(bodyParser.json());
 
 listingRouter.route('/')
 .get((req, res, next) => {
-    Listings.find({})
-    .then((listings) => {
-        res.statusCode = 200;
+    pool.query('SELECT * FROM listings;', (error, results) => {
+        if (error) {
+            next(error)
+        }
+        res.status = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(listings)
-    }, (err) => next(err))
-    .catch((err) => next(err));
+        res.json(results.rows);
+    })
 })
 .post(upload.single('file'), (req, res, next) => {
     const LISTINGS = ["id", "make", "price", "mileage", "seller_type"]
@@ -46,41 +51,70 @@ listingRouter.route('/')
     }
 
     const storeRows = (fileRows) => {
-        fs.unlinkSync(req.file.path);
-
+        var isError = false;
         if (format == "LISTINGS") {
-            promises = fileRows.map(row => {
-                const filter =  {id: row.id};
-                Listings.findOneAndUpdate(filter, {
-                    $set: row
-                }, { new: true , upsert: true})
-                .then((row) => (row))
-                .catch((err) => next(err))
+            fs.unlinkSync(req.file.path);
+            var promises = fileRows.splice(0, 5).map(row => {
+                const { id, make, price, mileage, seller_type } = row;
+                return new Promise((resolve, reject) => {
+                    pool.query('INSERT INTO listings (id, make, price, mileage, seller_type) \
+                        VALUES ($1, $2, $3, $4, $5)', [Number(id), String(make), Number(price), Number(mileage), seller_type],
+                        (error, results) => {
+                            if (error!==undefined) {
+                                console.log(error)
+                                isError = true;
+                                resolve();
+                            }
+                            else {
+                                resolve();
+                            }
+                        })   
+                })
             });
-
             Promise.all(promises).then(() => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json({data: fileRows, error: null});
+                if (isError) {
+                    res.status = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json({ data: null, error: "CSV format or data invalid." });
+                }
+                else {
+                    res.status = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json({ data: true, error: null });
+                }
             })
         }
         else if (format == "CONTACTS") {
-            promises = fileRows.map(row => {
-                const filter =  {id: row.listing_id};
-                Listings.findOneAndUpdate(
-                    filter, 
-                    { $push: { "contacts": row.contact_date } },
-                    {new: true}
-                )
-                .then((row) => (row))
-                .catch((err) => next(err))
+            fs.unlinkSync(req.file.path);
+            var promises = fileRows.splice(0, 5).map(row => {
+                const { listing_id, contact_date } = row;
+                return new Promise((resolve, reject) => {
+                    pool.query('INSERT INTO contacts (listing_id, contact_date) \
+                                VALUES ($1, $2)', [Number(listing_id), new Date(Number(contact_date))],
+                        (error, results) => {
+                            if (error!==undefined) {
+                                console.log(error)
+                                isError = true;
+                                resolve();
+                            }
+                            else {
+                                resolve();
+                            }
+                        })   
+                })
             });
-
             Promise.all(promises).then(() => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json({data: fileRows, error: null});
-            })          
+                if (isError) {
+                    res.status = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json({ data: null, error: "CSV format or data invalid." });
+                }
+                else {
+                    res.status = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json({ data: true, error: null });
+                }
+            })
         }
         else {
             res.statusCode = 200;
@@ -90,13 +124,14 @@ listingRouter.route('/')
     }
 })
 .delete((req,res,next) => {
-    Listings.remove({})
-    .then((resp) => {
-        res.statusCode = 200;
+    pool.query('DELETE FROM listings', (error, results) => {
+        if (error) {
+            next(error)
+        }
+        res.status = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(resp);
-    }, (err) => next(err))
-    .catch((err) => next(err));
+        res.json(results.rows);
+    })
 });
 
 module.exports = listingRouter;

@@ -27,7 +27,7 @@ class Main extends Component {
         )
         .then(response => response.json())
         .then(response => this.setState({data: response}))
-        .catch(error => { console.log('User', error.message); alert("Could not fetch data")});
+        .catch(error => { console.log('User', error.message)});
     } 
 
     addData(newData) {
