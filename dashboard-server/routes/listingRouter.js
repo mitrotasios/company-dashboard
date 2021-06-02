@@ -21,7 +21,7 @@ listingRouter.use(bodyParser.json());
 listingRouter.route('/')
 .get((req, res, next) => {
     pool.query('SELECT * FROM listings;', (error, results) => {
-        if (error) {
+        if (error!==undefined) {
             next(error)
         }
         res.status = 200;
@@ -41,7 +41,7 @@ listingRouter.route('/')
         .on('data', row => fileRows.push(row))
         .on('end', () => storeRows(fileRows));
     
-    const checkCols= (cols) => {
+    const checkCols = (cols) => {
         if (JSON.stringify(cols) === JSON.stringify(LISTINGS)) {
             format = "LISTINGS";
         }
@@ -124,8 +124,8 @@ listingRouter.route('/')
     }
 })
 .delete((req,res,next) => {
-    pool.query('DELETE FROM listings', (error, results) => {
-        if (error) {
+    pool.query('DELETE FROM listings;', (error, results) => {
+        if (error!==undefined) {
             next(error)
         }
         res.status = 200;
