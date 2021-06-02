@@ -6,35 +6,9 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [],
+            // data: [],
             isLoading: true
         }
-    }
-
-    componentDidMount() {
-        fetch('/api/listings')
-        .then(response => {
-            if (response.ok) {
-            return response;
-            } else {
-            var error = new Error('Error ' + response.status + ': ' + response.statusText);
-            error.response = response;
-            throw error;
-            }
-        }, error => {
-            throw error;
-            }
-        )
-        .then(response => response.json())
-        .then(response => this.setState({data: response}))
-        .catch(error => { console.log('User', error.message)});
-    } 
-
-    addData(newData) {
-        var oldData = this.state.data;
-        this.setState({
-            data: [...oldData, newData]
-        })
     }
 
     render() {
@@ -45,7 +19,7 @@ class Main extends Component {
                     component={() => (
                         <HomePage 
                             data={this.state.data}
-                            addData={this.addData}
+                            fetchData={this.fetchData}
                             isLoading={this.state.isLoading}
                             />
                     )}>
@@ -54,7 +28,7 @@ class Main extends Component {
                     component={() => (
                         <HomePage 
                             data={this.state.data}
-                            addData={this.addData}
+                            fetchData={this.fetchData}
                             isLoading={this.state.isLoading}
                             />
                     )}>
@@ -63,7 +37,7 @@ class Main extends Component {
                     component={() => (
                         <HomePage 
                             data={this.state.data}
-                            addData={this.addData}
+                            fetchData={this.fetchData}
                             isLoading={this.state.isLoading}
                             />
                     )}>
@@ -72,7 +46,7 @@ class Main extends Component {
                     component={() => (
                         <HomePage 
                             data={this.state.data}
-                            addData={this.addData}
+                            fetchData={this.fetchData}
                             isLoading={this.state.isLoading}
                             />
                     )}>

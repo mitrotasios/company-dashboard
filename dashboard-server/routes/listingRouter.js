@@ -20,14 +20,28 @@ listingRouter.use(bodyParser.json());
 
 listingRouter.route('/')
 .get((req, res, next) => {
-    pool.query('SELECT * FROM listings;', (error, results) => {
-        if (error!==undefined) {
-            next(error)
-        }
-        res.status = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(results.rows);
-    })
+    var table = req.query.table;
+    var count = req.query.count;
+    if (table=="contacts" && count=="true") {
+        pool.query('SELECT listing_id, COUNT(contact_date) FROM contacts GROUP BY listing_id;', (error, results) => {
+            if (error!==undefined) {
+                next(error)
+            }
+            res.status = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(results.rows);
+        })    
+    }
+    else {
+        pool.query('SELECT * FROM '+table, (error, results) => {
+            if (error!==undefined) {
+                next(error)
+            }
+            res.status = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(results.rows);
+        })
+    }
 })
 .post(upload.single('file'), (req, res, next) => {
     const LISTINGS = ["id", "make", "price", "mileage", "seller_type"]

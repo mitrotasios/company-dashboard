@@ -7,6 +7,7 @@ class PriceChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            data: [],
             pSum: 0,
             dSum: 0,
             oSum: 0,
@@ -38,12 +39,40 @@ class PriceChart extends Component {
     
 
     componentDidMount() {
-        var privateS = this.props.data.filter(row => {if (row.seller_type == "private") this.state.pSum += row.price; return row.price;})
-        var dealer = this.props.data.filter(row => {if (row.seller_type == "dealer") this.state.dSum += row.price; return row.price;})
-        var other = this.props.data.filter(row => {if (row.seller_type == "other") this.state.oSum += row.price; return row.price;})
-        var newSeries = [{values: [this.state.pSum/privateS.length, this.state.dSum/dealer.length, this.state.oSum/other.length], 'background-color': "rgba(43, 109, 247, 0.6)"}]
+        fetch('/api/listings?table=listings')
+        .then(response => {
+            if (response.ok) {
+                return response;
+            } else {
+            var error = new Error('Error ' + response.status + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+            }
+        }, error => {
+            throw error;
+            }
+        )
+        .then(response => response.json())
+        .then(response => this.calculateMetrics(response))
+        .catch(error => { console.log('User', error.message)});
+    }
+
+    calculateMetrics(data) {
+        var pSum = 0;
+        var privateS = data.filter(row => {if (row.seller_type == "private") pSum += row.price; return row.price;})
+        var dSum = 0;
+        var dealer = data.filter(row => {if (row.seller_type == "dealer") dSum += row.price; return row.price;})
+        var oSum = 0;
+        var other = data.filter(row => {if (row.seller_type == "other") oSum += row.price; return row.price;})
+        var newSeries = [{values: [pSum/privateS.length, dSum/dealer.length, oSum/other.length], 'background-color': "rgba(43, 109, 247, 0.6)"}]
+
         this.setState({
-            config: {...this.state.config, series: newSeries}
+            config: {...this.state.config, series: newSeries},
+            data: data,
+            pSum: pSum,
+            dSum: dSum,
+            oSum: oSum
+
         })
     }
 
@@ -55,7 +84,7 @@ class PriceChart extends Component {
                     <div className="row h-100">
                         <div className="col my-auto px-4">
                             <div>Average listing price</div>
-                            <div><span className="KPI">{((this.state.pSum+this.state.dSum+this.state.oSum)/this.props.data.length).toFixed(2)} EUR</span> </div>
+                            <div><span className="KPI">{((this.state.pSum+this.state.dSum+this.state.oSum)/this.state.data.length).toFixed(2)} EUR</span> </div>
                         </div>
                     </div>
                 </div>
@@ -63,7 +92,7 @@ class PriceChart extends Component {
                     <div className="row h-100">
                         <div className="col my-auto px-4">
                             <div>Number of listings </div>
-                            <div><span className="KPI">{this.props.data.length}</span></div>
+                            <div><span className="KPI">{this.state.data.length}</span></div>
                         </div>
                     </div>
                 </div>
