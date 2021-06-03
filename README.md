@@ -1,11 +1,45 @@
 # Company Dashboard – CSV uploader
+This is a simple dashboard to illustrate data for a cars marketplace.
+Users can upload CSV files in a specified format and are displayed simple metrics.
+Sample CSV files can be found in the **test-files** directory.
 
 ## Setup
 This setup assumes that you have installed Node.js and React.js on your machine.
 
-Clone the repository and navigate into the company-dashboard folder.
+Clone the repository and navigate into the company-dashboard folder. 
+The instructions assume that you are starting in the main directory company-dashboard.
 ```
 git clone https://github.com/mitrotasios/company-dashboard.git
 ```
 
-Install the required packages for the client and the server.
+Install the dependencies for the client and the server
+```
+cd dashboard-server
+npm install
+cd ..
+cd dashboard-client
+npm install
+```
+
+Run the server and client concurrently
+```
+cd dashboard-server
+npm run dev
+```
+
+Run the server only
+```
+cd dashboard-server
+npm run server
+```
+
+Run the client only
+```
+cd dashboard-server
+npm run client
+```
+
+## Using the web-app
+The server should be served on port ```3000```. You can then open the web app through ```[your ip address]:3000``` (http://localhost:3000/) and you should be directed to the front-page:
+
+
