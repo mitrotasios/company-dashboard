@@ -76,13 +76,17 @@ class Contacts extends Component {
                 <>
                 <div className="row kpis mt-2">
                     <div className="col-12 col-lg-6 col-xl-3 my-auto">
+                        <div className="row">
                         <Skeleton height="100px" width="100%"/>
+                        </div>
                     </div>
-                    <div className="col-12 col-lg-6 col-xl-3 my-auto">
-                        <Skeleton height="100px" width="100%"/>
+                    <div className="col-12 col-lg-6 col-xl-3 my-auto ml-3">
+                        <div className="row">
+                            <Skeleton height="100px" width="100%"/>
+                        </div>
                     </div>
                 </div>
-                <div className="row chart mt-5 text-center px-3">
+                <div className="row chart mt-5 text-center px-2">
                     <div className="col px-4">
                         <Skeleton height="50vh" width="100%"/>
                     </div>
