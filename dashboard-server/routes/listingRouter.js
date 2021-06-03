@@ -4,63 +4,69 @@ const mongoose = require('mongoose');
 const csv = require('fast-csv');
 const fs = require('fs');
 const multer = require('multer');
-const Pool = require('pg').Pool
-const dbKeys = require('../config');
 
-const pool = new Pool(dbKeys)
+const client = require('../elephantsql');
 
 const upload = multer({ dest: 'tmp/csv/' });
-
-const Listings = require('../models/listings');
 
 const listingRouter = express.Router();
 
 listingRouter.use(bodyParser.json());
 
 listingRouter.route('/')
-.get((req, res, next) => {
+.get((req, res, next) => { 
     var table = req.query.table;
     var count = req.query.count;
     var avg = req.query.avg;
-    console.log(table, avg, count)
     if (table=="contacts" && count=="contacts") {
-        pool.query('SELECT listing_id, COUNT(contact_date) AS count FROM contacts GROUP BY listing_id ORDER BY count DESC;', (error, results) => {
-            if (error!==undefined) {
+        client.query('SELECT listing_id, COUNT(contact_date) AS count FROM contacts GROUP BY listing_id ORDER BY count DESC;', (error, results) => {
+            if (error) {
+                console.log(error)
                 next(error)
             }
-            res.status = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(results.rows);
+            else{
+                res.status = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(results.rows);
+            }
         })    
     }
     else if (table=="listings" && count!==undefined && avg===undefined) {
-        pool.query('SELECT '+count+', COUNT('+count+') AS count FROM listings GROUP BY '+count+' ORDER BY count DESC;', (error, results) => {
-            if (error!==undefined) {
+        client.query('SELECT '+count+', COUNT('+count+') AS count FROM listings GROUP BY '+count+' ORDER BY count DESC;', (error, results) => {
+            if (error) {
+                console.log(error)
                 next(error)
             }
-            res.status = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(results.rows);
+            else {
+                res.status = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(results.rows);   
+            }
         })    
     }
     else if (table=="listings" && avg!==undefined && count===undefined) {
-        pool.query('SELECT seller_type, AVG('+avg+') FROM listings GROUP BY seller_type;', (error, results) => {
-            if (error!==undefined) {
+        client.query('SELECT seller_type, AVG('+avg+') FROM listings GROUP BY seller_type;', (error, results) => {
+            if (error) {
+                console.log(error)
                 next(error)
             }
-            res.status = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(results.rows);
+            else {
+                res.status = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(results.rows);
+            }
         })    
     }
     else {
-        pool.query('SELECT * FROM '+table, (error, results) => {
-            if (error!==undefined) {
+        client.query('SELECT * FROM '+table, (error, results) => {
+            if (error) {
                 next(error)
             }
-            res.status = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(results.rows);
+            else {
+                res.status = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(results.rows);
+            }
         })
     }
 })
@@ -92,10 +98,10 @@ listingRouter.route('/')
             var promises = fileRows.map(row => {
                 const { id, make, price, mileage, seller_type } = row;
                 return new Promise((resolve, reject) => {
-                    pool.query('INSERT INTO listings (id, make, price, mileage, seller_type) \
+                    client.query('INSERT INTO listings (id, make, price, mileage, seller_type) \
                         VALUES ($1, $2, $3, $4, $5)', [Number(id), String(make), Number(price), Number(mileage), seller_type],
                         (error, results) => {
-                            if (error!==undefined) {
+                            if (error) {
                                 console.log(error)
                                 isError = true;
                                 resolve();
@@ -124,10 +130,10 @@ listingRouter.route('/')
             var promises = fileRows.map(row => {
                 const { listing_id, contact_date } = row;
                 return new Promise((resolve, reject) => {
-                    pool.query('INSERT INTO contacts (listing_id, contact_date) \
+                    client.query('INSERT INTO contacts (listing_id, contact_date) \
                                 VALUES ($1, $2)', [Number(listing_id), new Date(Number(contact_date))],
                         (error, results) => {
-                            if (error!==undefined) {
+                            if (error) {
                                 console.log(error)
                                 isError = true;
                                 resolve();
@@ -159,8 +165,8 @@ listingRouter.route('/')
     }
 })
 .delete((req,res,next) => {
-    pool.query('DELETE FROM listings; DELETE FROM contacts;', (error, results) => {
-        if (error!==undefined) {
+    client.query('DELETE FROM listings; DELETE FROM contacts;', (error, results) => {
+        if (error) {
             next(error)
         }
         res.status = 200;

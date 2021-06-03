@@ -3,30 +3,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var config = require('./config');
 var cors = require('cors');
-//var Pool = require('pg').Pool
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var listingRouter = require('./routes/listingRouter');
-
-// const mongoose = require('mongoose');
-
-// const pool = new Pool({
-//   user: 'me',
-//   host: 'localhost',
-//   database: 'cars',
-//   password: 'password',
-//   port: 5432
-// })
-
-// const url = config.mongoUrl;
-// const connect = mongoose.connect(url, { useNewUrlParser: true });
-
-// connect.then((db) => {
-//   console.log('Connected correctly to server');
-// }, (err) => {console.log(err); });
 
 var app = express();
 
