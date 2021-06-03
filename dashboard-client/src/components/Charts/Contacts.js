@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import 'zingchart/es6';
 import ZingChart from 'zingchart-react';
-import './Charts.css'
+import './Charts.css';
+import Skeleton from '@yisheng90/react-loading';
 
 class Contacts extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoading: true,
             data: [],
             meanContacts: 0,
             config: {
                 type: 'bar',
                 title: {
-                    text: "Average Listing Price (EUR)",
+                    text: "Most Contacted Listings",
                     'font-family': "Helvetica",
                     'text-align': "left",
                     'font-color': "#2D2D35",
@@ -37,7 +39,7 @@ class Contacts extends Component {
     
 
     componentDidMount() {
-        fetch('/api/listings?table=contacts&count=true')
+        fetch('/api/listings?table=contacts&count=contacts')
         .then(response => {
             if (response.ok) {
                 return response;
@@ -53,23 +55,9 @@ class Contacts extends Component {
         .then(response => response.json())
         .then(response => {this.calculateMetrics(response);})
         .catch(error => { console.log('User', error.message)});
-        // data.sort((a, b) => {
-        //     if (a.contacts.length > b.contacts.length) return -1;
-        //     if (a.contacts.length < b.contacts.length) return 1;
-        // }) 
-        // console.log(data)
-        // var newSeries = [{values: data.map(row => row.contacts.length).splice(0,10), 'background-color': "rgba(43, 109, 247, 0.6)"}]
-        // var newScaleX = [{labels: data.map(row => String(row.listing_id)+"ID").splice(0,10), guide: {lineStyle: "dashed"}}]
-        // this.setState({
-        //     config: {...this.state.config, series: newSeries, scaleX: newScaleX}
-        // })
     }
 
     calculateMetrics(data) {
-        data.sort((a, b) => {
-            if (a.count > b.count) return -1;
-            if (a.count < b.count) return 1;
-        }) 
         var totalContacts = 0;
         data.map(row => totalContacts += Number(row.count))
         var newSeries = [{values: data.map(row => Number(row.count)).splice(0,5), 'background-color': "rgba(43, 109, 247, 0.6)"}];
@@ -77,38 +65,54 @@ class Contacts extends Component {
         this.setState({
             config: {...this.state.config, series: newSeries, scaleX: newScaleX},
             data: data,
-            meanContacts: totalContacts/data.length
+            meanContacts: totalContacts/data.length,
+            isLoading: false
         })
     }
 
     render() {
         return (
-            <>
-            <div className="row kpis mt-2">
-                <div className="col-12 col-lg-6 col-xl-3 primary-kpi my-auto">
-                    <div className="row h-100">
-                        <div className="col my-auto px-4">
-                            <div>Average contacts per listing</div>
-                            <div><span className="KPI">{this.state.meanContacts.toFixed(2)}</span> </div>
+            this.state.isLoading ? (
+                <>
+                <div className="row kpis mt-2">
+                    <div className="col-12 col-lg-6 col-xl-3 my-auto">
+                        <Skeleton height="100px" width="100%"/>
+                    </div>
+                    <div className="col-12 col-lg-6 col-xl-3 my-auto">
+                        <Skeleton height="100px" width="100%"/>
+                    </div>
+                </div>
+                <div className="row chart mt-5 text-center px-3">
+                    <div className="col px-4">
+                        <Skeleton height="50vh" width="100%"/>
+                    </div>
+                </div>
+                </>
+            ) : (
+                <>
+                <div className="row kpis mt-2">
+                    <div className="col-12 col-lg-6 col-xl-3 primary-kpi my-auto">
+                        <div className="row h-100">
+                            <div className="col my-auto px-4">
+                                <div>Average contacts per listing</div>
+                                <div><span className="KPI">{this.state.meanContacts.toFixed(2)}</span> </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-12 col-lg-6 col-xl-3 secondary-kpi my-auto">
+                        <div className="row h-100">
+                            <div className="col my-auto px-4">
+                                <div>Number of listings </div>
+                                <div><span className="KPI">{this.state.data.length}</span></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div className="col-12 col-lg-6 col-xl-3 secondary-kpi my-auto">
-                    <div className="row h-100">
-                        <div className="col my-auto px-4">
-                            <div>Number of listings </div>
-                            <div><span className="KPI">{this.state.data.length}</span></div>
-                        </div>
-                    </div>
+                <div className="row chart mt-5">
+                    <ZingChart data={this.state.config}/>
                 </div>
-            </div>
-            <div className="row chart mt-5">
-                <ZingChart data={this.state.config}/>
-            </div>
-            {/* <div style={{"marginLeft":"-2vh"}} className="col chart">
-                <ZingChart data={this.state.config}/>
-            </div> */}
-            </>
+                </>
+            )
         );
     }
 }

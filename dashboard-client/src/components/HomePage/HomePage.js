@@ -6,6 +6,7 @@ import PriceChart from '../Charts/PriceChart';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faAngleLeft } from '@fortawesome/free-solid-svg-icons'
 import Contacts from '../Charts/Contacts';
+import MakeDist from '../Charts/MakeDist';
 
 class HomePage extends Component {
     constructor(props) {
@@ -26,15 +27,15 @@ class HomePage extends Component {
         switch(path) {
             case 'selling-prices':
                 return(
-                    <PriceChart data={this.props.data}/>
+                    <PriceChart listings={this.props.listings} />
                 );
             case 'make-distribution':
                 return(
-                    <div></div>
+                    <MakeDist listings={this.props.listings} />
                 );
             case 'contacts':
                 return(
-                    <Contacts data={this.props.data}/>
+                    <Contacts listings={this.props.listings} />
                 );
             case 'upload':
                 return(
@@ -50,7 +51,7 @@ class HomePage extends Component {
             <>
             <div class="container-fluid">
                 <div className="row header">
-                    <div className="my-auto"><img src="/logo.png" width="100px"/></div>
+                    <a href="/"><div className="my-auto"><img src="/logo.png" width="100px"/></div></a>
                 </div>
                 <div class="row core">
                     <div class="col-2 sidebar">

@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import 'zingchart/es6';
 import ZingChart from 'zingchart-react';
-import './Charts.css'
+import './Charts.css';
+import Skeleton from '@yisheng90/react-loading';
 
 class MakeDist extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pSum: 0,
-            dSum: 0,
-            oSum: 0,
+            isLoading: true,
+            data: [],
             config: {
                 type: 'bar',
                 title: {
-                    text: "Average Listing Price (EUR)",
+                    text: "Make Distribution (%)",
                     'font-family': "Helvetica",
                     'text-align': "left",
                     'font-color': "#2D2D35",
@@ -23,9 +23,9 @@ class MakeDist extends Component {
                 },
                 scaleX: {
                     guide: {
-                        lineStyle: "dashed",
+                        'line-style': "dashed",
                     },
-                    labels: ["Private", "Dealer", "Other"]
+                    labels: []
                 },
                 series: [{
                     values: [1500,2500,4000],
@@ -38,43 +38,80 @@ class MakeDist extends Component {
     
 
     componentDidMount() {
-        var privateS = this.props.data.filter(row => {if (row.seller_type == "private") this.state.pSum += row.price; return row.price;})
-        var dealer = this.props.data.filter(row => {if (row.seller_type == "dealer") this.state.dSum += row.price; return row.price;})
-        var other = this.props.data.filter(row => {if (row.seller_type == "other") this.state.oSum += row.price; return row.price;})
-        var newSeries = [{values: [this.state.pSum/privateS.length, this.state.dSum/dealer.length, this.state.oSum/other.length], 'background-color': "rgba(43, 109, 247, 0.6)"}]
+        fetch('/api/listings?table=listings&count=make')
+        .then(response => {
+            if (response.ok) {
+                return response;
+            } else {
+            var error = new Error('Error ' + response.status + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+            }
+        }, error => {
+            throw error;
+            }
+        )
+        .then(response => response.json())
+        .then(response => {this.calculateMetrics(response);})
+        .catch(error => { console.log('User', error.message)});
+    }
+
+    calculateMetrics(data) {
+        var newSeries = [{values: data.map(row => Number((Number(row.count)/this.props.listings.length).toFixed(2))).splice(0,3), 'background-color': "rgba(43, 109, 247, 0.6)"}];
+        var newScaleX = {labels: data.map(row => String(row.make)).splice(0,3), guide: {lineStyle: "dashed"}};
         this.setState({
-            config: {...this.state.config, series: newSeries}
+            config: {...this.state.config, series: newSeries, scaleX: newScaleX},
+            data: data,
+            isLoading: false
         })
     }
 
     render() {
         return (
-            <>
-            <div className="row kpis mt-2">
-                <div className="col-12 col-lg-6 col-xl-3 primary-kpi my-auto">
-                    <div className="row h-100">
-                        <div className="col my-auto px-4">
-                            <div>Average listing price</div>
-                            <div><span className="KPI">{((this.state.pSum+this.state.dSum+this.state.oSum)/this.props.data.length).toFixed(2)} EUR</span> </div>
+            this.state.isLoading==true ? (
+                <>
+                <div className="row kpis mt-2">
+                    <div className="col-12 col-lg-6 col-xl-3 my-auto">
+                        <Skeleton height="100px" width="100%"/>
+                    </div>
+                    <div className="col-12 col-lg-6 col-xl-3 my-auto">
+                        <Skeleton height="100px" width="100%"/>
+                    </div>
+                </div>
+                <div className="row chart mt-5 text-center px-3">
+                    <div className="col px-4">
+                        <Skeleton height="50vh" width="100%"/>
+                    </div>
+                </div>
+                </>
+            ) : (
+                <>
+                <div className="row kpis mt-2">
+                    <div className="col-12 col-lg-6 col-xl-3 primary-kpi my-auto">
+                        <div className="row h-100">
+                            <div className="col my-auto px-4">
+                                <div>Max number of listings</div>
+                                <div><span className="KPI">{this.state.data[0] ? this.state.data[0].count : null}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-12 col-lg-6 col-xl-3 secondary-kpi my-auto">
+                        <div className="row h-100">
+                            <div className="col my-auto px-4">
+                                <div>Number of listings </div>
+                                <div><span className="KPI">{this.props.listings.length}</span></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div className="col-12 col-lg-6 col-xl-3 secondary-kpi my-auto">
-                    <div className="row h-100">
-                        <div className="col my-auto px-4">
-                            <div>Number of listings </div>
-                            <div><span className="KPI">{this.props.data.length}</span></div>
-                        </div>
-                    </div>
+                <div className="row chart mt-5">
+                    <ZingChart data={this.state.config}/>
                 </div>
-            </div>
-            <div className="row chart mt-5">
-                <ZingChart data={this.state.config}/>
-            </div>
-            {/* <div style={{"marginLeft":"-2vh"}} className="col chart">
-                <ZingChart data={this.state.config}/>
-            </div> */}
-            </>
+                {/* <div style={{"marginLeft":"-2vh"}} className="col chart">
+                    <ZingChart data={this.state.config}/>
+                </div> */}
+                </>
+            )          
         );
     }
 }

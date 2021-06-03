@@ -22,8 +22,18 @@ listingRouter.route('/')
 .get((req, res, next) => {
     var table = req.query.table;
     var count = req.query.count;
-    if (table=="contacts" && count=="true") {
-        pool.query('SELECT listing_id, COUNT(contact_date) FROM contacts GROUP BY listing_id;', (error, results) => {
+    if (table=="contacts" && count=="contacts") {
+        pool.query('SELECT listing_id, COUNT(contact_date) AS count FROM contacts GROUP BY listing_id ORDER BY count DESC;', (error, results) => {
+            if (error!==undefined) {
+                next(error)
+            }
+            res.status = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(results.rows);
+        })    
+    }
+    else if (table=="listings" && count=="make") {
+        pool.query('SELECT make, COUNT(make) AS count FROM listings GROUP BY make ORDER BY count DESC;', (error, results) => {
             if (error!==undefined) {
                 next(error)
             }

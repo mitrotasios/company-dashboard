@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import 'zingchart/es6';
 import ZingChart from 'zingchart-react';
-import './Charts.css'
+import './Charts.css';
+import Skeleton from '@yisheng90/react-loading';
 
 class PriceChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoading: true,
             data: [],
             pSum: 0,
             dSum: 0,
@@ -71,39 +73,55 @@ class PriceChart extends Component {
             data: data,
             pSum: pSum,
             dSum: dSum,
-            oSum: oSum
+            oSum: oSum,
+            isLoading: false
 
         })
     }
 
     render() {
         return (
-            <>
-            <div className="row kpis">
-                <div className="col-12 col-lg-6 col-xl-3 primary-kpi my-auto">
-                    <div className="row h-100">
-                        <div className="col my-auto px-4">
-                            <div>Average listing price</div>
-                            <div><span className="KPI">{((this.state.pSum+this.state.dSum+this.state.oSum)/this.state.data.length).toFixed(2)} EUR</span> </div>
+            this.state.isLoading ? (
+                <>
+                <div className="row kpis mt-2">
+                    <div className="col-12 col-lg-6 col-xl-3 my-auto">
+                        <Skeleton height="100px" width="100%"/>
+                    </div>
+                    <div className="col-12 col-lg-6 col-xl-3 my-auto">
+                        <Skeleton height="100px" width="100%"/>
+                    </div>
+                </div>
+                <div className="row chart mt-5 text-center px-3">
+                    <div className="col px-4">
+                        <Skeleton height="50vh" width="100%"/>
+                    </div>
+                </div>
+                </>
+            ) : (
+                <>
+                <div className="row kpis">
+                    <div className="col-12 col-lg-6 col-xl-3 primary-kpi my-auto">
+                        <div className="row h-100">
+                            <div className="col my-auto px-4">
+                                <div>Average listing price</div>
+                                <div><span className="KPI">{((this.state.pSum+this.state.dSum+this.state.oSum)/this.state.data.length).toFixed(2)} EUR</span> </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-12 col-lg-6 col-xl-3 secondary-kpi my-auto">
+                        <div className="row h-100">
+                            <div className="col my-auto px-4">
+                                <div>Number of listings </div>
+                                <div><span className="KPI">{this.state.data.length}</span></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div className="col-12 col-lg-6 col-xl-3 secondary-kpi my-auto">
-                    <div className="row h-100">
-                        <div className="col my-auto px-4">
-                            <div>Number of listings </div>
-                            <div><span className="KPI">{this.state.data.length}</span></div>
-                        </div>
-                    </div>
+                <div className="row chart">
+                    <ZingChart data={this.state.config}/>
                 </div>
-            </div>
-            <div className="row chart">
-                <ZingChart data={this.state.config}/>
-            </div>
-            {/* <div style={{"marginLeft":"-2vh"}} className="col chart">
-                <ZingChart data={this.state.config}/>
-            </div> */}
-            </>
+                </>
+            )
         );
     }
 }

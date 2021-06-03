@@ -6,9 +6,28 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // data: [],
+            listings: [],
             isLoading: true
         }
+    }
+
+    componentDidMount() {
+        fetch('/api/listings?table=listings')
+        .then(response => {
+            if (response.ok) {
+                return response;
+            } else {
+            var error = new Error('Error ' + response.status + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+            }
+        }, error => {
+            throw error;
+            }
+        )
+        .then(response => response.json())
+        .then(response => this.setState({ listings: response }))
+        .catch(error => { console.log('User', error.message)});
     }
 
     render() {
@@ -18,8 +37,7 @@ class Main extends Component {
                 <Route exact path="/dashboard/selling-prices" 
                     component={() => (
                         <HomePage 
-                            data={this.state.data}
-                            fetchData={this.fetchData}
+                            listings={this.state.listings}
                             isLoading={this.state.isLoading}
                             />
                     )}>
@@ -27,8 +45,7 @@ class Main extends Component {
                 <Route path="/dashboard/make-distribution" 
                     component={() => (
                         <HomePage 
-                            data={this.state.data}
-                            fetchData={this.fetchData}
+                            listings={this.state.listings}
                             isLoading={this.state.isLoading}
                             />
                     )}>
@@ -36,8 +53,7 @@ class Main extends Component {
                 <Route path="/dashboard/contacts" 
                     component={() => (
                         <HomePage 
-                            data={this.state.data}
-                            fetchData={this.fetchData}
+                            listings={this.state.listings}
                             isLoading={this.state.isLoading}
                             />
                     )}>
@@ -45,8 +61,7 @@ class Main extends Component {
                 <Route path="/dashboard/upload" 
                     component={() => (
                         <HomePage 
-                            data={this.state.data}
-                            fetchData={this.fetchData}
+                            listings={this.state.listings}
                             isLoading={this.state.isLoading}
                             />
                     )}>
