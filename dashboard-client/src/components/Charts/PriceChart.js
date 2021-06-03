@@ -84,27 +84,27 @@ class PriceChart extends Component {
             this.state.isLoading ? (
                 <>
                 <div className="row kpis mt-2">
-                    <div className="col-12 col-lg-6 col-xl-3 my-auto">
+                    <div className="col-12 col-lg-6 col-xl-4 my-auto">
                         <div className="row">
                             <Skeleton height="100px" width="100%"/>
                         </div>
                     </div>
-                    <div className="col-12 col-lg-6 col-xl-3 my-auto ml-3">
+                    <div className="col-12 col-lg-6 col-xl-4 my-auto ml-3">
                         <div className="row">
                             <Skeleton height="100px" width="100%"/>
                         </div>
                     </div>
                 </div>
-                <div className="row chart mt-5 text-center px-2">
-                    <div className="col px-4">
-                        <Skeleton height="50vh" width="100%"/>
+                <div className="row chart mt-2 text-center px-2">
+                    <div className="col px-3">
+                        <Skeleton height="40vh" width="100%"/>
                     </div>
                 </div>
                 </>
             ) : (
                 <>
                 <div className="row kpis">
-                    <div className="col-12 col-lg-6 col-xl-3 primary-kpi my-auto">
+                    <div className="col-12 col-lg-6 col-xl-4 primary-kpi my-auto">
                         <div className="row h-100">
                             <div className="col my-auto px-4">
                                 <div>Average listing price</div>
@@ -112,7 +112,7 @@ class PriceChart extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col-12 col-lg-6 col-xl-3 secondary-kpi my-auto">
+                    <div className="col-12 col-lg-6 col-xl-4 secondary-kpi my-auto">
                         <div className="row h-100">
                             <div className="col my-auto px-4">
                                 <div>Number of listings </div>
@@ -121,8 +121,8 @@ class PriceChart extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="row chart">
-                    <ZingChart data={this.state.config}/>
+                <div className="row chart mt-2">
+                    <ZingChart data={this.state.config} height={450}/>
                 </div>
                 </>
             )

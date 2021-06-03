@@ -1,3 +1,7 @@
+.page-wrapper {
+    height: 100vh;
+}
+
 .header {
     border-bottom: 1px solid #CACACB;
     box-shadow: 0px 0px 2px 0px #CACACB;
@@ -13,7 +17,7 @@
 }
 
 .menu-item {
-    margin-top: 20px;
+    margin-bottom: 20px;
     padding-top: 5px;
     padding-bottom: 5px;
     color: #919191;
@@ -34,7 +38,7 @@
 }
 
 .menu-item-active {
-    margin-top: 20px;
+    margin-bottom: 20px;
     padding-top: 5px;
     padding-bottom: 5px;
     border-right: 3px solid #2D2D35;
@@ -79,36 +83,6 @@
     height: 100px;
 }
 
-.kpis {
-    height: 150px;
-}
-
-.primary-kpi {
-    background-color: #F5F200;
-    border-radius: 10px;
-    height: 100px;
-    box-shadow: 0px 0px 5px 0px #E2E2E4;
-    margin-right: 30px;
-}
-
-.secondary-kpi {
-    border-color: 1px solid #E2E2E4;
-    border-radius: 10px;
-    height: 100px;
-    box-shadow: 0px 0px 5px 0px #E2E2E4;
-    color: #919191;
-}
-
-.secondary-kpi > .row > .col > div > span {
-    color: #919191;
-}
-
-.KPI {
-    font-size: x-large;
-    font-weight: 700;
-    color: #2D2D35;
-}
-
 .avatar-wrapper {
     background-color: #EBECEE;
     border-radius: 50%;
@@ -140,3 +114,16 @@
 .sub-msg {
     color: #7D7D82;
 } 
+
+.delete-button {
+    background-color: #FF2929;
+    color: white;
+    font-weight: 500;
+    border-radius: 5px;
+    padding: 3px 5px 3px 5px;
+}
+
+.delete-button:hover {
+    color: white;
+    box-shadow: 0px 0px 5px 0px #CACACB;
+}

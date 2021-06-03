@@ -1,3 +1,33 @@
 .chart {
-    margin-left: -3vh;
+    margin-left: -2.5vh;
+}
+
+.kpis {
+    height: 150px;
+}
+
+.primary-kpi {
+    background-color: #F5F200;
+    border-radius: 10px;
+    height: 100px;
+    box-shadow: 0px 0px 5px 0px #E2E2E4;
+    margin-right: 30px;
+}
+
+.secondary-kpi {
+    border-color: 1px solid #E2E2E4;
+    border-radius: 10px;
+    height: 100px;
+    box-shadow: 0px 0px 5px 0px #E2E2E4;
+    color: #919191;
+}
+
+.secondary-kpi > .row > .col > div > span {
+    color: #919191;
+}
+
+.KPI {
+    font-size: x-large;
+    font-weight: 700;
+    color: #2D2D35;
 }

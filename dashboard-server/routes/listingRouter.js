@@ -78,7 +78,7 @@ listingRouter.route('/')
         var isError = false;
         if (format == "LISTINGS") {
             fs.unlinkSync(req.file.path);
-            var promises = fileRows.splice(0, 5).map(row => {
+            var promises = fileRows.map(row => {
                 const { id, make, price, mileage, seller_type } = row;
                 return new Promise((resolve, reject) => {
                     pool.query('INSERT INTO listings (id, make, price, mileage, seller_type) \
@@ -110,7 +110,7 @@ listingRouter.route('/')
         }
         else if (format == "CONTACTS") {
             fs.unlinkSync(req.file.path);
-            var promises = fileRows.splice(0, 5).map(row => {
+            var promises = fileRows.map(row => {
                 const { listing_id, contact_date } = row;
                 return new Promise((resolve, reject) => {
                     pool.query('INSERT INTO contacts (listing_id, contact_date) \
@@ -148,13 +148,13 @@ listingRouter.route('/')
     }
 })
 .delete((req,res,next) => {
-    pool.query('DELETE FROM listings;', (error, results) => {
+    pool.query('DELETE FROM listings; DELETE FROM contacts;', (error, results) => {
         if (error!==undefined) {
             next(error)
         }
         res.status = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(results.rows);
+        res.json(results);
     })
 });
 

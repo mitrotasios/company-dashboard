@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './HomePage.css';
-import { FileUpload } from '../FileUpload/FileUpload';
-import DropZone from '../FileUpload/DropZone';
+import FileUpload from '../FileUpload/FileUpload';
 import PriceChart from '../Charts/PriceChart';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faAngleLeft } from '@fortawesome/free-solid-svg-icons'
@@ -39,22 +38,48 @@ class HomePage extends Component {
                 );
             case 'upload':
                 return(
-                    <DropZone 
+                    <FileUpload 
                         data={this.props.data} 
                         addData={this.props.addData} />
                 );
         }
     }
 
+    deleteRequest = () => {
+        fetch('/api/listings', {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                return response;
+                } else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+                }
+            }, error => {
+                throw error;
+                }
+            )
+            .then(response => response.json())
+            .then(response => alert("All files have been successfully deleted"))
+            .catch(error => { console.log('User', error.message) });
+    }
+
     render() {
         return(
             <>
-            <div class="container-fluid">
+            <div className="container-fluid min-vh-100 d-flex flex-column">
                 <div className="row header">
-                    <a href="/"><div className="my-auto"><img src="/logo.png" width="100px"/></div></a>
+                    <div className="col">
+                        <a href="/"><div className="my-auto"><img src="/logo.png" width="100px"/></div></a>
+                    </div>
+                    <div className="col-2 my-auto align-self-end text-end">
+                        <a class="delete-button" type="button" onClick={this.deleteRequest}>Delete Data</a>
+                    </div>
                 </div>
-                <div class="row core">
-                    <div class="col-2 sidebar">
+                <div class="row main-row d-flex flex-row flex-grow-1">
+                    <div class="col-2 flex-grow-1 sidebar core py-3">
                         <div class="row menu mt-4">
                             <div class={"menu-item"+(this.state.currentPath=='selling-prices' ? '-active' : '')}>
                                 <a type="button" href="/dashboard/selling-prices">Listing Selling Prices</a>
@@ -63,7 +88,7 @@ class HomePage extends Component {
                                 <a type="button" href="/dashboard/make-distribution">Maker Distribution</a>
                             </div>
                             <div class={"menu-item"+(this.state.currentPath=='contacts' ? '-active' : '')}>
-                                <a type="button" href="/dashboard/contacts">Most Contacted Listings</a>
+                                <a type="button" href="/dashboard/contacts">Listing Contacts</a>
                             </div>
                         </div>
                         <div class="row">
@@ -119,8 +144,6 @@ class HomePage extends Component {
                             {this.renderContent(this.state.currentPath)}
                         </div>
                     </div>
-                    {/* <FileUpload data={this.props.data}/>
-                    <DropZone data={this.props.data} /> */}
                 </div>
             </div>
             </>
