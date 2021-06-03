@@ -112,7 +112,7 @@ class HomePage extends Component {
                     </div>
                     <div class="col-10 px-5">
                         <div className="row profile-info mt-4">
-                            <div className="col my-auto top-wrapper">
+                            <div className="col-9 my-auto top-wrapper">
                                 <div style={{"marginLeft":"-15px"}} className="avatar-wrapper">
                                     <img src="/memoji.png" />
                                 </div>
