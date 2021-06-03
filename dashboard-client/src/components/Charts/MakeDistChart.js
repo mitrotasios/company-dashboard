@@ -57,7 +57,7 @@ class MakeDist extends Component {
     }
 
     calculateMetrics(data) {
-        var newSeries = [{values: data.map(row => Number((Number(row.count)/this.props.listings.length).toFixed(2))).splice(0,3), 'background-color': "rgba(43, 109, 247, 0.6)"}];
+        var newSeries = [{values: data.map(row => Number((Number(row.count)/this.props.listings.length).toFixed(4))*100).splice(0,3), 'background-color': "rgba(43, 109, 247, 0.6)"}];
         var newScaleX = {labels: data.map(row => String(row.make)).splice(0,3), guide: {lineStyle: "dashed"}};
         this.setState({
             config: {...this.state.config, series: newSeries, scaleX: newScaleX},

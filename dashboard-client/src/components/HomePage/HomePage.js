@@ -4,8 +4,8 @@ import FileUpload from '../FileUpload/FileUpload';
 import PriceChart from '../Charts/PriceChart';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faAngleLeft } from '@fortawesome/free-solid-svg-icons'
-import Contacts from '../Charts/Contacts';
-import MakeDist from '../Charts/MakeDist';
+import Contacts from '../Charts/ContactsChart';
+import MakeDist from '../Charts/MakeDistChart';
 
 class HomePage extends Component {
     constructor(props) {

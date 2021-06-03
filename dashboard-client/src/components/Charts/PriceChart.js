@@ -10,9 +10,7 @@ class PriceChart extends Component {
         this.state = {
             isLoading: true,
             data: [],
-            pSum: 0,
-            dSum: 0,
-            oSum: 0,
+            priceSum: 0,
             config: {
                 type: 'bar',
                 title: {
@@ -41,7 +39,7 @@ class PriceChart extends Component {
     
 
     componentDidMount() {
-        fetch('/api/listings?table=listings')
+        fetch('/api/listings?table=listings&avg=price')
         .then(response => {
             if (response.ok) {
                 return response;
@@ -60,22 +58,16 @@ class PriceChart extends Component {
     }
 
     calculateMetrics(data) {
-        var pSum = 0;
-        var privateS = data.filter(row => {if (row.seller_type == "private") pSum += row.price; return row.price;})
-        var dSum = 0;
-        var dealer = data.filter(row => {if (row.seller_type == "dealer") dSum += row.price; return row.price;})
-        var oSum = 0;
-        var other = data.filter(row => {if (row.seller_type == "other") oSum += row.price; return row.price;})
-        var newSeries = [{values: [pSum/privateS.length, dSum/dealer.length, oSum/other.length], 'background-color': "rgba(43, 109, 247, 0.6)"}]
+        var priceSum = 0;
+        this.props.listings.map(row => priceSum+=Number(row.price))
+        var newSeries = [{values: data.map(row => Number(Number(row.avg).toFixed(2))), 'background-color': "rgba(43, 109, 247, 0.6)"}]
+        var newScaleX = {labels: data.map(row => String(row.seller_type)), guide: {lineStyle: "dashed"}};
 
         this.setState({
-            config: {...this.state.config, series: newSeries},
+            config: {...this.state.config, series: newSeries, scaleX: newScaleX},
             data: data,
-            pSum: pSum,
-            dSum: dSum,
-            oSum: oSum,
+            priceSum: priceSum,
             isLoading: false
-
         })
     }
 
@@ -108,7 +100,7 @@ class PriceChart extends Component {
                         <div className="row h-100">
                             <div className="col my-auto px-4">
                                 <div>Average listing price</div>
-                                <div><span className="KPI">{((this.state.pSum+this.state.dSum+this.state.oSum)/this.state.data.length).toFixed(2)} EUR</span> </div>
+                                <div><span className="KPI">{((this.state.priceSum)/this.props.listings.length).toFixed(2)} EUR</span> </div>
                             </div>
                         </div>
                     </div>
@@ -116,7 +108,7 @@ class PriceChart extends Component {
                         <div className="row h-100">
                             <div className="col my-auto px-4">
                                 <div>Number of listings </div>
-                                <div><span className="KPI">{this.state.data.length}</span></div>
+                                <div><span className="KPI">{this.props.listings.length}</span></div>
                             </div>
                         </div>
                     </div>

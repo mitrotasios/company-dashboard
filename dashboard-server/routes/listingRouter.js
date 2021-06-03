@@ -12,7 +12,6 @@ const pool = new Pool(dbKeys)
 const upload = multer({ dest: 'tmp/csv/' });
 
 const Listings = require('../models/listings');
-const { worker } = require('cluster');
 
 const listingRouter = express.Router();
 
@@ -22,6 +21,8 @@ listingRouter.route('/')
 .get((req, res, next) => {
     var table = req.query.table;
     var count = req.query.count;
+    var avg = req.query.avg;
+    console.log(table, avg, count)
     if (table=="contacts" && count=="contacts") {
         pool.query('SELECT listing_id, COUNT(contact_date) AS count FROM contacts GROUP BY listing_id ORDER BY count DESC;', (error, results) => {
             if (error!==undefined) {
@@ -32,8 +33,18 @@ listingRouter.route('/')
             res.json(results.rows);
         })    
     }
-    else if (table=="listings" && count=="make") {
-        pool.query('SELECT make, COUNT(make) AS count FROM listings GROUP BY make ORDER BY count DESC;', (error, results) => {
+    else if (table=="listings" && count!==undefined && avg===undefined) {
+        pool.query('SELECT '+count+', COUNT('+count+') AS count FROM listings GROUP BY '+count+' ORDER BY count DESC;', (error, results) => {
+            if (error!==undefined) {
+                next(error)
+            }
+            res.status = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(results.rows);
+        })    
+    }
+    else if (table=="listings" && avg!==undefined && count===undefined) {
+        pool.query('SELECT seller_type, AVG('+avg+') FROM listings GROUP BY seller_type;', (error, results) => {
             if (error!==undefined) {
                 next(error)
             }
