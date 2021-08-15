@@ -1,5 +1,5 @@
 # Company Dashboard – CSV uploader
-This is a simple dashboard to illustrate data for a cars marketplace.
+This is a simple dashboard to illustrate data for a car marketplace.
 Users can upload CSV files in a specified format and are displayed simple metrics.
 Sample CSV files can be found in the **test-files** directory.
 
